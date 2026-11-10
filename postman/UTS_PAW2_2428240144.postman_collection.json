@@ -1,101 +1,1024 @@
 {
   "info": {
-    "name": "UTS PAW2 - 2428240144 - Pemilihan Raya Kampus",
+    "name": "UTS PAW2 - 2428240144 - Pemilihan Raya Kampus (Terurut + PUT/DELETE)",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
-      "name": "1. POST Fakultas (201)",
-      "request": {
-        "method": "POST",
-        "header": [{ "key": "Content-Type", "value": "application/json" }],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"kode\": \"FIKR\",\n  \"nama\": \"Fakultas Ilmu Komputer dan Rekayasa\"\n}"
+      "name": "Pemilihan Raya Kampus",
+      "item": [
+        {
+          "name": "A. CRUD",
+          "item": [
+            {
+              "name": "Semua Fakultas",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/fakultas",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "fakultas"
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 200', function () { pm.response.to.have.status(200); });",
+                      "var d = pm.response.json();",
+                      "if (d.length && !pm.collectionVariables.get('fakultasId')) { pm.collectionVariables.set('fakultasId', d[0]._id); }"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Tambah Fakultas",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/fakultas",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "fakultas"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"kode\": \"T{{rand}}\",\n  \"nama\": \"Fakultas Contoh {{rand}}\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.collectionVariables.set('rand', Math.random().toString(36).slice(2,6).toUpperCase());"
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 201', function () { pm.response.to.have.status(201); });",
+                      "var d = pm.response.json();",
+                      "pm.collectionVariables.set('fakultasId', d._id);"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Tambah Kandidat",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/kandidat",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "kandidat"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"noUrut\": \"N{{rand}}\",\n  \"nama\": \"Dewi Anggraini\",\n  \"jumlahPendukung\": 90,\n  \"jalur\": \"independen\",\n  \"wakil\": {\n    \"nama\": \"Rizky Aulia\",\n    \"nim\": \"2428240170\"\n  },\n  \"fakultasId\": \"{{fakultasId}}\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.collectionVariables.set('rand', Math.random().toString(36).slice(2,6).toUpperCase());"
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 201', function () { pm.response.to.have.status(201); });",
+                      "var d = pm.response.json();",
+                      "pm.collectionVariables.set('kandidatId', d._id);"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Semua Kandidat (Projection)",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/kandidat",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "kandidat"
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 200', function () { pm.response.to.have.status(200); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Filter Kandidat ?jalur=partai",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/kandidat?jalur=partai",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "kandidat"
+                  ],
+                  "query": [
+                    {
+                      "key": "jalur",
+                      "value": "partai"
+                    }
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 200', function () { pm.response.to.have.status(200); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Satu Kandidat (Populate)",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/kandidat/{{kandidatId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "kandidat",
+                    "{{kandidatId}}"
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 200', function () { pm.response.to.have.status(200); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Ubah Kandidat",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/kandidat/{{kandidatId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "kandidat",
+                    "{{kandidatId}}"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nama\": \"Dewi Anggraini (Diubah)\",\n  \"jumlahPendukung\": 150,\n  \"jalur\": \"ormawa\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 200', function () { pm.response.to.have.status(200); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Ubah Fakultas",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/fakultas/{{fakultasId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "fakultas",
+                    "{{fakultasId}}"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nama\": \"Fakultas Contoh (Diubah)\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 200', function () { pm.response.to.have.status(200); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Hapus Kandidat",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/kandidat/{{kandidatId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "kandidat",
+                    "{{kandidatId}}"
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 200', function () { pm.response.to.have.status(200); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Hapus Fakultas",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/fakultas/{{fakultasId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "fakultas",
+                    "{{fakultasId}}"
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 200', function () { pm.response.to.have.status(200); });"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
         },
-        "url": {
-          "raw": "http://localhost:3000/fakultas",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "3000",
-          "path": ["fakultas"]
+        {
+          "name": "B. Skenario Gagal",
+          "item": [
+            {
+              "name": "Fakultas Kode Duplikat (409)",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/fakultas",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "fakultas"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"kode\": \"{{dupKode}}\",\n  \"nama\": \"Duplikat\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "var base = pm.collectionVariables.get('baseUrl');",
+                      "function post(path, obj, cb) { pm.sendRequest({ url: base + path, method: 'POST', header: { 'Content-Type': 'application/json' }, body: { mode: 'raw', raw: JSON.stringify(obj) } }, cb); }",
+                      "var r = Math.random().toString(36).slice(2,6).toUpperCase();",
+                      "pm.collectionVariables.set('dupKode', 'D' + r);",
+                      "post('/fakultas', { kode: 'D' + r, nama: 'Fakultas Duplikat' }, function () {});"
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 409', function () { pm.response.to.have.status(409); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Fakultas Data Tidak Lengkap (400)",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/fakultas",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "fakultas"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 400', function () { pm.response.to.have.status(400); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Kandidat NoUrut Duplikat (409)",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/kandidat",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "kandidat"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"noUrut\": \"{{dupNoUrut}}\",\n  \"nama\": \"Uji Gagal\",\n  \"jumlahPendukung\": 10,\n  \"jalur\": \"independen\",\n  \"wakil\": {\n    \"nama\": \"Wakil Uji\",\n    \"nim\": \"2428240199\"\n  },\n  \"fakultasId\": \"{{fakultasId}}\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "var base = pm.collectionVariables.get('baseUrl');",
+                      "function post(path, obj, cb) { pm.sendRequest({ url: base + path, method: 'POST', header: { 'Content-Type': 'application/json' }, body: { mode: 'raw', raw: JSON.stringify(obj) } }, cb); }",
+                      "var r = Math.random().toString(36).slice(2,6).toUpperCase();",
+                      "pm.collectionVariables.set('dupNoUrut', 'D' + r);",
+                      "var fid = pm.collectionVariables.get('fakultasId') || '000000000000000000000000';",
+                      "post('/kandidat', { noUrut: 'D' + r, nama: 'Kandidat Duplikat', jumlahPendukung: 1, jalur: 'independen', wakil: { nama: 'Wakil', nim: '1' }, fakultasId: fid }, function () {});"
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 409', function () { pm.response.to.have.status(409); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Kandidat Tanpa Wakil (400)",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/kandidat",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "kandidat"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"noUrut\": \"X\",\n  \"nama\": \"Uji Gagal\",\n  \"jumlahPendukung\": 10,\n  \"jalur\": \"independen\",\n  \"fakultasId\": \"{{fakultasId}}\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 400', function () { pm.response.to.have.status(400); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Kandidat Pendukung Negatif (400)",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/kandidat",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "kandidat"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"noUrut\": \"X\",\n  \"nama\": \"Uji Gagal\",\n  \"jumlahPendukung\": -5,\n  \"jalur\": \"independen\",\n  \"wakil\": {\n    \"nama\": \"Wakil Uji\",\n    \"nim\": \"2428240199\"\n  },\n  \"fakultasId\": \"{{fakultasId}}\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 400', function () { pm.response.to.have.status(400); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Kandidat fakultasId Salah Format (400)",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/kandidat",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "kandidat"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"noUrut\": \"X\",\n  \"nama\": \"Uji Gagal\",\n  \"jumlahPendukung\": 10,\n  \"jalur\": \"independen\",\n  \"wakil\": {\n    \"nama\": \"Wakil Uji\",\n    \"nim\": \"2428240199\"\n  },\n  \"fakultasId\": \"abc\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 400', function () { pm.response.to.have.status(400); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "JSON Rusak (400)",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/fakultas",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "fakultas"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"kode\": \"RUSAK\",\n  \"nama\": \"Tanpa kurung tutup\"\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 400', function () { pm.response.to.have.status(400); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Get ID Salah Format (400)",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/kandidat/abc",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "kandidat",
+                    "abc"
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 400', function () { pm.response.to.have.status(400); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Get ID Sudah Dihapus (404)",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/kandidat/{{kandidatId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "kandidat",
+                    "{{kandidatId}}"
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 404', function () { pm.response.to.have.status(404); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Get ID Tidak Ada (404)",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/kandidat/000000000000000000000000",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "kandidat",
+                    "000000000000000000000000"
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 404', function () { pm.response.to.have.status(404); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Put ID Salah Format (400)",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/kandidat/abc",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "kandidat",
+                    "abc"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nama\": \"Uji\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 400', function () { pm.response.to.have.status(400); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Put ID Tidak Ada (404)",
+              "request": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/kandidat/000000000000000000000000",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "kandidat",
+                    "000000000000000000000000"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nama\": \"Uji\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 404', function () { pm.response.to.have.status(404); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Delete ID Salah Format (400)",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/kandidat/abc",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "kandidat",
+                    "abc"
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 400', function () { pm.response.to.have.status(400); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Delete ID Sudah Dihapus (404)",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/kandidat/{{kandidatId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "kandidat",
+                    "{{kandidatId}}"
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 404', function () { pm.response.to.have.status(404); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Delete Fakultas Masih Dipakai (409)",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/fakultas/{{usedFakultasId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "fakultas",
+                    "{{usedFakultasId}}"
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "var base = pm.collectionVariables.get('baseUrl');",
+                      "function post(path, obj, cb) { pm.sendRequest({ url: base + path, method: 'POST', header: { 'Content-Type': 'application/json' }, body: { mode: 'raw', raw: JSON.stringify(obj) } }, cb); }",
+                      "var r = Math.random().toString(36).slice(2,6).toUpperCase();",
+                      "var fid = pm.collectionVariables.get('fakultasId') || '000000000000000000000000';",
+                      "post('/fakultas', { kode: 'U' + r, nama: 'Fakultas Dipakai' }, function (e, res) {",
+                      "  var f = res.json();",
+                      "  pm.collectionVariables.set('usedFakultasId', f._id);",
+                      "  post('/kandidat', { noUrut: 'U' + r, nama: 'Kandidat Terkait', jumlahPendukung: 1, jalur: 'independen', wakil: { nama: 'Wakil', nim: '1' }, fakultasId: f._id }, function () {});",
+                      "});"
+                    ]
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 409', function () { pm.response.to.have.status(409); });"
+                    ]
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Rute Tidak Ada (404)",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/rute-ngawur",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "rute-ngawur"
+                  ]
+                }
+              },
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status 404', function () { pm.response.to.have.status(404); });"
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
         }
-      }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
     },
     {
-      "name": "2. GET Semua Fakultas (200)",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:3000/fakultas",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "3000",
-          "path": ["fakultas"]
-        }
-      }
+      "key": "fakultasId",
+      "value": ""
     },
     {
-      "name": "3. POST Kandidat (201)",
-      "request": {
-        "method": "POST",
-        "header": [{ "key": "Content-Type", "value": "application/json" }],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"noUrut\": \"01\",\n  \"nama\": \"Agus Firman\",\n  \"jumlahPendukung\": 10,\n  \"jalur\": \"independen\",\n  \"wakil\": {\n    \"nama\": \"Rionaldy Wijaya\",\n    \"nim\": \"2428240143\"\n  },\n  \"fakultasId\": \"GANTI_DENGAN_ID_FAKULTAS\"\n}"
-        },
-        "url": {
-          "raw": "http://localhost:3000/kandidat",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "3000",
-          "path": ["kandidat"]
-        }
-      }
+      "key": "kandidatId",
+      "value": ""
     },
     {
-      "name": "4. GET Semua Kandidat + Projection (200)",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:3000/kandidat",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "3000",
-          "path": ["kandidat"]
-        }
-      }
+      "key": "dupKode",
+      "value": ""
     },
     {
-      "name": "5. GET Filter Kandidat ?jalur=partai (200)",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:3000/kandidat?jalur=partai",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "3000",
-          "path": ["kandidat"],
-          "query": [{ "key": "jalur", "value": "partai" }]
-        }
-      }
+      "key": "dupNoUrut",
+      "value": ""
     },
     {
-      "name": "6. GET Detail Kandidat by ID + Populate (200)",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "http://localhost:3000/kandidat/GANTI_DENGAN_ID_KANDIDAT",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "3000",
-          "path": ["kandidat", "GANTI_DENGAN_ID_KANDIDAT"]
-        }
-      }
+      "key": "usedFakultasId",
+      "value": ""
+    },
+    {
+      "key": "rand",
+      "value": ""
     }
   ]
 }

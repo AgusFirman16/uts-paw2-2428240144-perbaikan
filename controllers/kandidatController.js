@@ -54,3 +54,43 @@ exports.getById = async (req, res, next) => {
     next(err);
   }
 };
+
+// PUT /kandidat/:id (hanya field yang dikirim yang diubah, validasi schema tetap berjalan)
+exports.update = async (req, res, next) => {
+  try {
+    const { noUrut, nama, jumlahPendukung, jalur, wakil, fakultasId } = req.body;
+
+    const perubahan = {};
+    if (noUrut !== undefined) perubahan.noUrut = noUrut;
+    if (nama !== undefined) perubahan.nama = nama;
+    if (jumlahPendukung !== undefined) perubahan.jumlahPendukung = jumlahPendukung;
+    if (jalur !== undefined) perubahan.jalur = jalur;
+    if (wakil !== undefined) perubahan.wakil = { nama: wakil.nama, nim: wakil.nim };
+    if (fakultasId !== undefined) perubahan.fakultasId = fakultasId;
+
+    const data = await Kandidat.findByIdAndUpdate(req.params.id, perubahan, {
+      new: true,
+      runValidators: true,
+    }).populate('fakultasId', 'kode nama');
+
+    if (!data) {
+      throw errorHttp(404, 'Data kandidat tidak ditemukan');
+    }
+    res.status(200).json(data);
+  } catch (err) {
+    next(err);
+  }
+};
+
+// DELETE /kandidat/:id
+exports.remove = async (req, res, next) => {
+  try {
+    const data = await Kandidat.findByIdAndDelete(req.params.id);
+    if (!data) {
+      throw errorHttp(404, 'Data kandidat tidak ditemukan');
+    }
+    res.status(200).json({ message: 'Data kandidat berhasil dihapus' });
+  } catch (err) {
+    next(err);
+  }
+};
