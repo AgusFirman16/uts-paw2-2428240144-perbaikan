@@ -1,0 +1,101 @@
+{
+  "info": {
+    "name": "UTS PAW2 - 2428240144 - Pemilihan Raya Kampus",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. POST Fakultas (201)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"kode\": \"FIKR\",\n  \"nama\": \"Fakultas Ilmu Komputer dan Rekayasa\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/fakultas",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["fakultas"]
+        }
+      }
+    },
+    {
+      "name": "2. GET Semua Fakultas (200)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/fakultas",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["fakultas"]
+        }
+      }
+    },
+    {
+      "name": "3. POST Kandidat (201)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"noUrut\": \"01\",\n  \"nama\": \"Agus Firman\",\n  \"jumlahPendukung\": 10,\n  \"jalur\": \"independen\",\n  \"wakil\": {\n    \"nama\": \"Rionaldy Wijaya\",\n    \"nim\": \"2428240143\"\n  },\n  \"fakultasId\": \"GANTI_DENGAN_ID_FAKULTAS\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:3000/kandidat",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["kandidat"]
+        }
+      }
+    },
+    {
+      "name": "4. GET Semua Kandidat + Projection (200)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/kandidat",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["kandidat"]
+        }
+      }
+    },
+    {
+      "name": "5. GET Filter Kandidat ?jalur=partai (200)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/kandidat?jalur=partai",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["kandidat"],
+          "query": [{ "key": "jalur", "value": "partai" }]
+        }
+      }
+    },
+    {
+      "name": "6. GET Detail Kandidat by ID + Populate (200)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/kandidat/GANTI_DENGAN_ID_KANDIDAT",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["kandidat", "GANTI_DENGAN_ID_KANDIDAT"]
+        }
+      }
+    }
+  ]
+}
